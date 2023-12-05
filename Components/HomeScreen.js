@@ -5,7 +5,7 @@ const HomeScreen = ({ navigation }) => {
          <View>
         
         <Image
-          source={require('./logoteste.png')}
+          source={require('./logoteste.jpeg')}
           style={styles.logo}
         />
       </View>
@@ -55,10 +55,12 @@ const HomeScreen = ({ navigation }) => {
     },
     separator: {
       height: 16, 
-    },  logo: {
-      width: 100, 
+    },logo: {
+      width: 100,
       height: 100,
-      resizeMode: 'contain', 
+      borderRadius: 50,
+      overflow: 'hidden', // Garante que a imagem não ultrapasse os limites do borderRadius
     },
+    
   });
   export default HomeScreen;

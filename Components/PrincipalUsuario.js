@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, TextInput, Modal, Text, TouchableOpacity, ScrollView, Image } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -25,19 +25,55 @@ const PrincipalUsuario = () => {
     latitude: -22.898590,
     longitude: -43.114353,
   };
-
+  const [catchthewaves, setCatchthewaves] = useState(false);
+  const [timer, setTimer] = useState(0);
   const [situacao, setSituacao] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedSearch, setSelectedSearch] = useState('');
+  const [selectedTime, setSelectedTime] = useState(0); // Novo estado para armazenar o tempo selecionado
+
 
   const handleOKPress = () => {
     setModalVisible(true);
   };
 
   const closeModal = () => {
+    
     setModalVisible(false);
     setSituacao("");
+    
   };
+  const closeModalCatch = () => {
+    setTimer(0);
+    setSelectedTime(0);
+    setCatchthewaves(false)
+  }
+
+
+  const toggleModal = (time) => {
+    setSelectedTime(time);
+    setTimeout(() => {
+      setCatchthewaves(true);
+    }, 5000);
+  };
+  useEffect(() => {
+    let interval;
+  
+    if (catchthewaves) {
+      const intervalDuration = 1000; // 1 segundo em milissegundos
+      setTimer(selectedTime * 60); // Inicia o timer com o valor selecionado em minutos, mas em segundos
+      interval = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1); // Contagem regressiva em segundos
+      }, intervalDuration);
+    } else {
+      clearInterval(interval);
+      setTimer(0); // Reinicializa o timer quando o modal é fechado
+    }
+  
+    return () => clearInterval(interval);
+  }, [catchthewaves, selectedTime]);
+  
+  
 
   return (
     <View style={styles.container}>
@@ -60,7 +96,18 @@ const PrincipalUsuario = () => {
           onSubmitEditing={handleOKPress}
         />
       </View>
-
+      <Modal animationType="slide"
+        transparent={true}
+        visible={catchthewaves}
+        onRequestClose={closeModalCatch}>
+        <View style={styles.modalContentV}>
+          <Text style={styles.modalTextv}>Profissional solicitado: Vagner Dom</Text>
+          <Text style={styles.modalTextv}>Cronômetro: {timer}  segundos</Text>
+          <TouchableOpacity style={styles.closeButtonV} onPress={toggleModal}>
+            <Text style={styles.closeButtonTextV} onPress={closeModalCatch}>Cancelar profissional</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
       <Modal
         animationType="slide"
         transparent={true}
@@ -72,15 +119,16 @@ const PrincipalUsuario = () => {
             <Text style={styles.modalText}>Valor do Pedido: {situacao}</Text>
 
             <View style={styles.optionContainer}>
-              <TouchableOpacity style={styles.optionButton}>
-                <Text style={styles.optionText}>Rápido</Text>
-                <Text style={styles.optionValue}>22 min - R$200</Text>
-              </TouchableOpacity>
+            <TouchableOpacity style={styles.optionButton} onPress={() => toggleModal(12)}>
+  <Text style={styles.optionText}>Rápido</Text>
+  <Text style={styles.optionValue}>12 min - R$200</Text>
+</TouchableOpacity>
 
-              <TouchableOpacity style={styles.optionButton}>
-                <Text style={styles.optionText}>Normal</Text>
-                <Text style={styles.optionValue}>120 min - R$100</Text>
-              </TouchableOpacity>
+<TouchableOpacity style={styles.optionButton} onPress={() => toggleModal(30)}>
+  <Text style={styles.optionText}>Normal</Text>
+  <Text style={styles.optionValue}>30 min - R$100</Text>
+</TouchableOpacity>
+
             </View>
 
             <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
@@ -89,7 +137,7 @@ const PrincipalUsuario = () => {
           </View>
         </View>
       </Modal>
-
+      
       <View style={styles.bottomContainer}>
         <Text style={styles.bottomTitle}>Mais Pesquisadas/Clique Rápido</Text>
         <ScrollView horizontal={true} style={styles.searchContainer}>
@@ -293,6 +341,41 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 25,
     marginHorizontal: 10,
+  },
+  modalContentV: {
+    backgroundColor: 'gray', // Cor de fundo
+    padding: 20,
+    borderRadius: 10,
+    elevation: 5,
+    width: '60%', // Largura do modal
+    alignSelf: 'center', // Posiciona ao centro horizontalmente
+    alignItems: 'center', // Centraliza o conteúdo
+    justifyContent: 'center', // Centraliza verticalmente
+    top:120,
+    marginBottom: 30,
+  },
+  modalTitleV: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: 'white', // Cor do texto
+  },
+  modalTextV: {
+    fontSize: 18,
+    marginBottom: 10,
+    color: 'white', // Cor do texto
+  },
+  closeButtonV: {
+    marginTop: 20, // Aumentei a margem superior
+    backgroundColor: 'black',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  closeButtonTextV: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

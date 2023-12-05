@@ -38,7 +38,6 @@ const PrestadorScreen = () => {
 
   const jobs = [
     { label: 'Trocar Pneu', value: 'Trocar Pneu' },
-    { label: 'Especialista de eletrica', value: 'Especialista de eletrica' },
     { label: 'Busco sua gasolina', value: 'Busco sua gasolina' },
     { label: 'Chaveiro', value: 'Chaveiro' },
     { label: 'Mecanico faz tudo', value: 'Mecanico faz tudo' },

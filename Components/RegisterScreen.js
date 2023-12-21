@@ -1,10 +1,9 @@
 import React from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity,Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {auth, provider} from "../src/services/firebaseConfig";
-import {createUserWithEmailAndPassword} from "firebase/auth";
-
+import { auth, provider } from '../src/services/firebaseConfig';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 const RegisterScreen = () => {
   const navigation = useNavigation();
@@ -13,36 +12,30 @@ const RegisterScreen = () => {
   const [password, setPassword] = React.useState('');
   const [cPassword, setCPassword] = React.useState('');
 
-    const handleRegister = () => {
-      if (password !== cPassword) {
-        Alert.alert('A senha e a confirmação de senha não coincidem');
-        return;
-      }
+  const handleRegister = () => {
+    if (password !== cPassword) {
+      Alert.alert('A senha e a confirmação de senha não coincidem');
+      return;
+    }
     createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-      navigation.navigate('principaluser'); 
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(errorMessage);
-      
-    });
-  }
+      .then((userCredential) => {
+        const user = userCredential.user;
+        navigation.navigate('principaluser');
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorMessage);
+      });
+  };
 
   const handleGoogleRegister = () => {
-    console.log('Registrado com Apple:', nome);
+    console.log('Registrado com Google:', nome);
   };
 
   const handleAppleRegister = () => {
-    // Lógica para lidar com o registro com Apple
-    // ...
-
     console.log('Registrado com Apple:', nome);
   };
-
-
 
   return (
     <View style={styles.container}>
@@ -78,19 +71,17 @@ const RegisterScreen = () => {
       <Text style={styles.orText}>OU</Text>
 
       <TouchableOpacity style={styles.socialButton} onPress={handleGoogleRegister}>
-        <Icon name="google" size={20} color="white" style={styles.icon} />
+        <Icon name="google" size={20} color="#fff" style={styles.icon} />
         <Text style={styles.socialButtonText}>Registrar com Google</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.socialButton} onPress={handleAppleRegister}>
-        <Icon name="apple" size={20} color="white" style={styles.icon} />
+        <Icon name="apple" size={20} color="#fff" style={styles.icon} />
         <Text style={styles.socialButtonText}>Registrar com Apple</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={handleAlreadyHaveAccount = () => {
-       navigation.navigate('LoginUser'); 
-      }}>
-        <Text style={{ marginTop: 10, color: 'blue' }}>Já possuo login</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('LoginUser')}>
+        <Text style={{ marginTop: 10, color: '#3498db' }}>Já possuo login</Text>
       </TouchableOpacity>
     </View>
   );
@@ -102,25 +93,29 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
+    backgroundColor: '#ecf0f1', // Light background color
   },
   title: {
     fontSize: 24,
     marginBottom: 16,
+    color: '#2c3e50', // Darker text color
   },
   input: {
     height: 40,
     width: '80%',
-    borderColor: 'gray',
+    borderColor: '#bdc3c7', // Border color
     borderWidth: 1,
     marginBottom: 16,
     paddingHorizontal: 8,
+    borderRadius: 8,
   },
   orText: {
     marginVertical: 16,
     fontSize: 16,
+    color: '#95a5a6', // Lighter text color
   },
   socialButton: {
-    backgroundColor: 'black', 
+    backgroundColor: '#34495e', // Darker background color
     padding: 12,
     borderRadius: 8,
     marginVertical: 8,
@@ -132,7 +127,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   socialButtonText: {
-    color: 'white',
+    color: '#fff', // White text color
   },
 });
 

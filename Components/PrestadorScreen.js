@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert ,ScrollView,TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert, ScrollView, TouchableOpacity } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 import { auth } from "../src/services/firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-
 
 const PrestadorScreen = () => {
   const navigation = useNavigation();
@@ -12,7 +11,7 @@ const PrestadorScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [cPassword, setCPassword] = useState('');
-  const [cpf, setCpf] = useState(''); 
+  const [cpf, setCpf] = useState('');
   const [selectedJobs, setSelectedJobs] = useState([]);
   const [selectedJobNames, setSelectedJobNames] = useState([]);
 
@@ -23,11 +22,9 @@ const PrestadorScreen = () => {
     const index = updatedSelection.indexOf(jobValue);
 
     if (index !== -1) {
-      // Se já estiver selecionado, remova da seleção
       updatedSelection.splice(index, 1);
       updatedJobNames.splice(index, 1);
     } else {
-      // Se não estiver selecionado, adicione à seleção
       updatedSelection.push(jobValue);
       updatedJobNames.push(jobLabel);
     }
@@ -40,7 +37,7 @@ const PrestadorScreen = () => {
     { label: 'Trocar Pneu', value: 'Trocar Pneu' },
     { label: 'Busco sua gasolina', value: 'Busco sua gasolina' },
     { label: 'Chaveiro', value: 'Chaveiro' },
-    { label: 'Mecanico faz tudo', value: 'Mecanico faz tudo' },
+    { label: 'Mecânico faz tudo', value: 'Mecânico faz tudo' },
   ];
 
   const handleRegister = () => {
@@ -49,11 +46,10 @@ const PrestadorScreen = () => {
       return;
     }
 
-    
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        navigation.navigate('principalPrestador'); 
+        navigation.navigate('principalPrestador');
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -63,7 +59,7 @@ const PrestadorScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Registro Prestador</Text>
       <TextInput
         style={styles.input}
@@ -97,70 +93,29 @@ const PrestadorScreen = () => {
         value={cPassword}
         onChangeText={setCPassword}
       />
-<ScrollView contentContainerStyle={{ padding: 20 }}>
-      <Text style={{ marginBottom: 10 }}>Selecione o tipo de trabalho:</Text>
+      <Text style={styles.label}>Selecione o tipo de trabalho:</Text>
       {jobs.map((job) => (
         <TouchableOpacity
           key={job.value}
-          style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}
+          style={styles.jobButton}
           onPress={() => handleJobSelection(job.value, job.label)}
         >
-          <View
-            style={{
-              width: 20,
-              height: 20,
-              borderRadius: 5,
-              borderWidth: 2,
-              borderColor: 'black',
-              marginRight: 10,
-              backgroundColor: selectedJobs.includes(job.value) ? 'black' : 'transparent',
-            }}
-          />
-          <Text>{job.label}</Text>
+          <Text style={styles.jobButtonText}>{job.label}</Text>
         </TouchableOpacity>
       ))}
+      <Text style={styles.selectedJobsLabel}>Trabalhos Selecionados: {selectedJobNames.join(', ')}</Text>
 
-      <Text style={{ marginTop: 20, fontWeight: 'bold' }}>
-        Trabalhos Selecionados: {selectedJobNames.join(', ')}
-      </Text>
-    </ScrollView>
       <Button title="Registrar" onPress={handleRegister} />
-      <TouchableOpacity onPress={handleAlreadyHaveAccount = () => {
-       navigation.navigate('Login'); 
-      }}>
-        <Text style={{ marginTop: 10, color: 'blue' }}>Já possuo login</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.loginLink}>Já possuo login</Text>
       </TouchableOpacity>
-    </View>
-    
+    </ScrollView>
   );
 };
 
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 4,
-    color: 'black',
-    paddingRight: 30,
-  },
-  inputAndroid: {
-    fontSize: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderWidth: 0.5,
-    borderColor: 'purple',
-    borderRadius: 8,
-    color: 'black',
-    paddingRight: 30,
-  },
-});
-
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
@@ -172,10 +127,35 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     width: '80%',
-    borderColor: 'gray',
+    borderColor: '#3498db',
     borderWidth: 1,
     marginBottom: 16,
     paddingHorizontal: 8,
+    borderRadius: 8,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  jobButton: {
+    backgroundColor: '#3498db',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+  jobButtonText: {
+    color: '#fff',
+    fontSize: 16,
+  },
+  selectedJobsLabel: {
+    marginTop: 20,
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  loginLink: {
+    marginTop: 10,
+    color: '#3498db',
+    fontSize: 16,
   },
 });
 

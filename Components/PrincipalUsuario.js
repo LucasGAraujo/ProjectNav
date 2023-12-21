@@ -30,7 +30,7 @@ const PrincipalUsuario = () => {
   const [situacao, setSituacao] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedSearch, setSelectedSearch] = useState('');
-  const [selectedTime, setSelectedTime] = useState(0); // Novo estado para armazenar o tempo selecionado
+  const [selectedTime, setSelectedTime] = useState(0); 
 
 
   const handleOKPress = () => {
@@ -54,20 +54,20 @@ const PrincipalUsuario = () => {
     setSelectedTime(time);
     setTimeout(() => {
       setCatchthewaves(true);
-    }, 5000);
+    }, 1000);
   };
   useEffect(() => {
     let interval;
   
     if (catchthewaves) {
-      const intervalDuration = 1000; // 1 segundo em milissegundos
-      setTimer(selectedTime * 60); // Inicia o timer com o valor selecionado em minutos, mas em segundos
+      const intervalDuration = 1000; 
+      setTimer(selectedTime * 60); 
       interval = setInterval(() => {
-        setTimer((prevTimer) => prevTimer - 1); // Contagem regressiva em segundos
+        setTimer((prevTimer) => prevTimer - 1);
       }, intervalDuration);
     } else {
       clearInterval(interval);
-      setTimer(0); // Reinicializa o timer quando o modal é fechado
+      setTimer(0); 
     }
   
     return () => clearInterval(interval);
@@ -191,8 +191,7 @@ const PrincipalUsuario = () => {
             <Icon name="key" size={50} color="white" style={styles.icon} />
             <Text style={styles.searchButtonText}>Chaveiro</Text>
           </TouchableOpacity>
-          {/* Adicione mais opções conforme necessário */}
-        </ScrollView>
+          </ScrollView>
       </View>
     </View>
   );
@@ -203,177 +202,205 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
+    backgroundColor: '#1F1F1F', // Fundo escuro
   },
+
   map: {
     ...StyleSheet.absoluteFillObject,
   },
+
   inputContainer: {
     position: 'absolute',
     top: 70,
     width: '80%',
-    backgroundColor: 'black',
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    elevation: 5,
+    backgroundColor: '#2D2D2D', // Cor mais escura
+    borderRadius: 15,
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    elevation: 8,
   },
+
   input: {
     height: 40,
-    color: 'white',
+    color: '#FFFFFF', // Texto branco
   },
+
   modalContainer: {
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Fundo escuro com transparência
   },
+
   modalContent: {
-    backgroundColor: 'white',
+    backgroundColor: '#353535', // Cor mais escura
     padding: 20,
-    borderRadius: 10,
-    elevation: 5,
+    borderRadius: 20,
+    elevation: 8,
     width: '100%',
     marginBottom: 30,
   },
+
   modalText: {
     fontSize: 18,
-    marginBottom: 10,
+    marginBottom: 15,
+    color: '#FFFFFF', // Texto branco
   },
+
   optionContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+
   optionButton: {
-    backgroundColor: 'black',
-    padding: 10,
-    borderRadius: 5,
+    backgroundColor: '#FF6F61', // Cor laranja vibrante
+    padding: 15,
+    borderRadius: 10,
     alignItems: 'center',
     flex: 1,
-    margin: 5,
+    margin: 10,
   },
+
   optionText: {
-    color: 'white',
+    color: '#FFFFFF', // Texto branco
     marginBottom: 5,
   },
+
   optionValue: {
-    color: 'white',
+    color: '#FFFFFF', // Texto branco
   },
+
   closeButton: {
-    marginTop: 10,
-    backgroundColor: 'black',
-    padding: 10,
-    borderRadius: 5,
+    marginTop: 20,
+    backgroundColor: '#FF6F61', // Cor laranja vibrante
+    padding: 15,
+    borderRadius: 10,
     alignItems: 'center',
   },
+
   closeButtonText: {
-    color: 'white',
+    color: '#FFFFFF', // Texto branco
+    fontSize: 16,
+    fontWeight: 'bold',
   },
+
   bottomContainer: {
     position: 'absolute',
     bottom: 0,
     width: '100%',
     height: '30%',
-    backgroundColor: 'black',
-    padding: 10,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    elevation: 5,
+    backgroundColor: '#2D2D2D', // Cor mais escura
+    padding: 20,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    elevation: 8,
   },
+
   bottomTitle: {
-    color: 'white',
-    fontSize: 16,
+    color: '#FFFFFF', // Texto branco
+    fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 5,
+    marginBottom: 15,
   },
+
   searchContainer: {
     flexDirection: 'row',
-    marginTop: 5,
+    marginTop: 10,
   },
+
   searchButton: {
-    backgroundColor: '#DDDDDD',
-    padding: 10,
-    height: 90,
+    backgroundColor: '#FFD700', // Cor amarela vibrante
+    padding: 20,
+    height: 120,
     width: 'auto',
-    borderRadius: 5,
-    marginRight: 10,
+    borderRadius: 15,
+    marginRight: 20,
     flexDirection: 'column',
     alignItems: 'center',
   },
+
   searchButtonText: {
-    color: 'black',
+    color: '#353535', // Texto escuro
     textAlign: 'center',
     flex: 1,
+    marginTop: 10,
+    fontSize: 14,
+    fontWeight: 'bold',
   },
+
   selectedSearch: {
-    backgroundColor: 'black',
+    backgroundColor: '#1F1F1F', // Fundo escuro
   },
+
   profileContainer: {
-    marginLeft: 10,
-  },
-  profileImage: {
-    backgroundColor: 'gray',
-    width: 40,
-    height: 40,
-    borderRadius: 25,
-    
-  },
-  profileContainer: {
-    width:"90%",
-    left:176,
-    flexDirection: 'row', 
-    alignItems: 'center', 
+    marginLeft: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
+    width: '90%',
   },
+
   profileImager: {
     textAlign: "center",
     fontSize: 20,
-    color: 'white',
-    backgroundColor: 'black',
-    left:-30,
-    width: 130,
-    height: 30,
+    color: '#FFFFFF', // Texto branco
+    backgroundColor: '#2D2D2D', // Cor mais escura
+    marginLeft: -40,
+    width: 150,
+    height: 40,
     borderRadius: 25,
-    marginHorizontal: 10,
+    paddingHorizontal: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
+
   profileImage: {
-    backgroundColor: 'black',
-    width: 130,
-    height: 30,
+    backgroundColor: '#2D2D2D', // Cor mais escura
+    width: 150,
+    height: 40,
     borderRadius: 25,
-    marginHorizontal: 10,
+    marginLeft: 150,
+    paddingHorizontal: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
+
   modalContentV: {
-    backgroundColor: 'gray', // Cor de fundo
+    backgroundColor: '#353535', // Cor mais escura
     padding: 20,
-    borderRadius: 10,
-    elevation: 5,
-    width: '60%', // Largura do modal
-    alignSelf: 'center', // Posiciona ao centro horizontalmente
-    alignItems: 'center', // Centraliza o conteúdo
-    justifyContent: 'center', // Centraliza verticalmente
-    top:120,
+    borderRadius: 15,
+    elevation: 8,
+    width: '70%',
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    top: 120,
     marginBottom: 30,
   },
+
   modalTitleV: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 10,
-    color: 'white', // Cor do texto
+    marginBottom: 15,
+    color: '#FFFFFF', // Texto branco
   },
+
   modalTextV: {
     fontSize: 18,
-    marginBottom: 10,
-    color: 'white', // Cor do texto
+    marginBottom: 15,
+    color: '#FFFFFF', // Texto branco
   },
+
   closeButtonV: {
-    marginTop: 20, // Aumentei a margem superior
-    backgroundColor: 'black',
-    padding: 10,
-    borderRadius: 5,
+    marginTop: 25,
+    backgroundColor: '#FF6F61', // Cor laranja vibrante
+    padding: 15,
+    borderRadius: 10,
     alignItems: 'center',
   },
+
   closeButtonTextV: {
-    color: 'white',
+    color: '#FFFFFF', // Texto branco
     fontSize: 16,
     fontWeight: 'bold',
   },

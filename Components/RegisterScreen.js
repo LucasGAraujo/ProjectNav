@@ -66,7 +66,8 @@ const RegisterScreen = () => {
         value={cPassword}
         onChangeText={setCPassword}
       />
-      <Button title="Registrar" onPress={handleRegister} />
+      <Button title="Registrar" onPress={handleRegister}
+        color="#a32c28" />
 
       <Text style={styles.orText}>OU</Text>
 
@@ -81,7 +82,7 @@ const RegisterScreen = () => {
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate('LoginUser')}>
-        <Text style={{ marginTop: 10, color: '#3498db' }}>Já possuo login</Text>
+        <Text style={{ marginTop: 10, color: '#a32c28' }}>Já possuo login</Text>
       </TouchableOpacity>
     </View>
   );
@@ -93,14 +94,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: '#ecf0f1', // Light background color
+    backgroundColor: "black", // Light background color
   },
   title: {
     fontSize: 24,
     marginBottom: 16,
-    color: '#2c3e50', // Darker text color
+    color: 'white', // Darker text color
   },
   input: {
+    backgroundColor:"white",
     height: 40,
     width: '80%',
     borderColor: '#bdc3c7', // Border color
@@ -112,10 +114,10 @@ const styles = StyleSheet.create({
   orText: {
     marginVertical: 16,
     fontSize: 16,
-    color: '#95a5a6', // Lighter text color
+   color: '#a32c28',
   },
   socialButton: {
-    backgroundColor: '#34495e', // Darker background color
+    backgroundColor: '#a32c28', // Darker background color
     padding: 12,
     borderRadius: 8,
     marginVertical: 8,
@@ -127,7 +129,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   socialButtonText: {
-    color: '#fff', // White text color
+    color: 'black', // White text color
   },
 });
 

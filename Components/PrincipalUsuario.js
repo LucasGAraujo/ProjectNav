@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
   },
 
   searchButton: {
-    backgroundColor: '#FFD700', // Cor amarela vibrante
+    backgroundColor: '#a32c28', // Cor amarela vibrante
     padding: 20,
     height: 120,
     width: 'auto',

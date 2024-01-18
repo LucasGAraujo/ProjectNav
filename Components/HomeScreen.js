@@ -12,14 +12,14 @@ const HomeScreen = ({ navigation }) => {
         title="Registrar como Prestador"
         onPress={() => navigation.navigate('Prestador')}
         style={styles.button}
-        color="#6C63FF"
+        color="#a32c28"
       />
       <View style={styles.separator} />
       <Button
         title="Registrar como Usuário"
         onPress={() => navigation.navigate('Usuario')}
         style={styles.button}
-        color="#6C63FF"
+        color="#a32c28"
       />
     </View>
   );
@@ -31,16 +31,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: '#F9F9F9', 
+    backgroundColor: '#000000', 
   },
   title: {
     fontSize: 24,
     marginBottom: 24,
-    color: '#333', 
+    color: '#FFFFFF', 
   },
   button: {
     marginTop: 16,
-    backgroundColor: '#6C63FF', 
     borderRadius: 8,
     paddingVertical: 12,
     paddingHorizontal: 24,
@@ -52,10 +51,12 @@ const styles = StyleSheet.create({
     height: 16,
   },
   logo: {
-    width: 100,
-    height: 100,
+    width: 200,
+    height: 200,
     borderRadius: 50,
     overflow: 'hidden',
+    borderWidth: 2, 
+    borderColor: 'white', 
   },
 });
 

@@ -105,7 +105,8 @@ const PrestadorScreen = () => {
       ))}
       <Text style={styles.selectedJobsLabel}>Trabalhos Selecionados: {selectedJobNames.join(', ')}</Text>
 
-      <Button title="Registrar" onPress={handleRegister} />
+      <Button title="Registrar" onPress={handleRegister} 
+        color="#a32c28"/>
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
         <Text style={styles.loginLink}>Já possuo login</Text>
       </TouchableOpacity>
@@ -119,10 +120,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
+    backgroundColor:"black",
   },
   title: {
     fontSize: 24,
     marginBottom: 16,
+    color:"white",
   },
   input: {
     height: 40,
@@ -132,14 +135,16 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     paddingHorizontal: 8,
     borderRadius: 8,
+    backgroundColor:'white',
   },
   label: {
     fontSize: 16,
     marginBottom: 10,
+    color:"white",
   },
   jobButton: {
-    backgroundColor: '#3498db',
-    padding: 12,
+    backgroundColor: '#a32c28',
+    padding: 2,
     borderRadius: 8,
     marginBottom: 10,
   },
@@ -151,10 +156,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontWeight: 'bold',
     fontSize: 16,
+    color:"white",
   },
   loginLink: {
     marginTop: 10,
-    color: '#3498db',
+    color: '#a32c28',
     fontSize: 16,
   },
 });

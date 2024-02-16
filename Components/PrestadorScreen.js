@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, Button, StyleSheet, Alert, ScrollView, TouchableOpacity, Image } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
 import { auth } from "../src/services/firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const PrestadorScreen = () => {
   const navigation = useNavigation();
+  const [foto, setFoto] = useState(null);
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -15,6 +17,28 @@ const PrestadorScreen = () => {
   const [selectedJobs, setSelectedJobs] = useState([]);
   const [selectedJobNames, setSelectedJobNames] = useState([]);
 
+  useEffect(() => {
+    (async () => {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('A permissão para acessar a biblioteca de mídia é necessária!');
+      }
+    })();
+  }, []);
+
+  const escolherFoto = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setFoto(result.uri);
+    }
+  };
+  
   const handleJobSelection = (jobValue, jobLabel) => {
     const updatedSelection = [...selectedJobs];
     const updatedJobNames = [...selectedJobNames];
@@ -60,7 +84,17 @@ const PrestadorScreen = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      
       <Text style={styles.title}>Registro Prestador</Text>
+      <TouchableOpacity onPress={escolherFoto}>
+        {foto ? (
+          <Image source={{ uri: foto }} style={styles.foto} />
+        ) : (
+          <View style={styles.placeholder}>
+            <Text style={styles.placeholderText}>Adicionar Foto</Text>
+          </View>
+        )}
+      </TouchableOpacity>
       <TextInput
         style={styles.input}
         placeholder="Cpf"
@@ -107,7 +141,7 @@ const PrestadorScreen = () => {
 
       <Button title="Registrar" onPress={handleRegister} 
         color="#a32c28"/>
-      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+      <TouchableOpacity onPress={() => navigation.navigate('NAVSOS')}>
         <Text style={styles.loginLink}>Já possuo login</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -115,6 +149,25 @@ const PrestadorScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  foto: {
+    width: 150,
+    height: 150,
+    borderRadius: 100,
+    marginBottom: 16,
+  },
+  placeholder: {
+    width: 130,
+    height: 130,
+    borderRadius: 100,
+    backgroundColor: '#ccc',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  placeholderText: {
+    fontSize: 16,
+    color: '#555',
+  },
   container: {
     flexGrow: 1,
     justifyContent: 'center',

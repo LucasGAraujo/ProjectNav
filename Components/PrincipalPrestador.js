@@ -7,20 +7,6 @@ import { useNavigation } from '@react-navigation/native';
 const PrincipalPrestador = () => {
   const navigation = useNavigation();
 
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: () => (
-
-         
-          <View style={styles.profileContainer}>
-            <TouchableOpacity onPress={() => console.log('Perfil Pressionado')}>
-              <Image source={require('./foto.png')} style={styles.profileImage} />
-            </TouchableOpacity>
-        </View>
-      ),
-    });
-  }, [navigation]);
-
   const niteroiCoords = {
     latitude: -22.898590,
     longitude: -43.114353,

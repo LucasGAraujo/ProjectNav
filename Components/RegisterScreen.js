@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -11,7 +12,30 @@ const RegisterScreen = () => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [cPassword, setCPassword] = React.useState('');
+  const [foto, setFoto] = useState(null);
 
+  useEffect(() => {
+    (async () => {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('A permissão para acessar a biblioteca de mídia é necessária!');
+      }
+    })();
+  }, []);
+
+  const escolherFoto = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setFoto(result.uri);
+    }
+  };
+  
   const handleRegister = () => {
     if (password !== cPassword) {
       Alert.alert('A senha e a confirmação de senha não coincidem');
@@ -28,18 +52,19 @@ const RegisterScreen = () => {
         console.log(errorMessage);
       });
   };
-
-  const handleGoogleRegister = () => {
-    console.log('Registrado com Google:', nome);
-  };
-
-  const handleAppleRegister = () => {
-    console.log('Registrado com Apple:', nome);
-  };
-
   return (
     <View style={styles.container}>
+
       <Text style={styles.title}>Registro</Text>
+      <TouchableOpacity onPress={escolherFoto}>
+        {foto ? (
+          <Image source={{ uri: foto }} style={styles.foto} />
+        ) : (
+          <View style={styles.placeholder}>
+            <Text style={styles.placeholderText}>Adicionar Foto</Text>
+          </View>
+        )}
+      </TouchableOpacity>
       <TextInput
         style={styles.input}
         placeholder="Nome completo"
@@ -69,19 +94,7 @@ const RegisterScreen = () => {
       <Button title="Registrar" onPress={handleRegister}
         color="#a32c28" />
 
-      <Text style={styles.orText}>OU</Text>
-
-      <TouchableOpacity style={styles.socialButton} onPress={handleGoogleRegister}>
-        <Icon name="google" size={20} color="#fff" style={styles.icon} />
-        <Text style={styles.socialButtonText}>Registrar com Google</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.socialButton} onPress={handleAppleRegister}>
-        <Icon name="apple" size={20} color="#fff" style={styles.icon} />
-        <Text style={styles.socialButtonText}>Registrar com Apple</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => navigation.navigate('LoginUser')}>
+      <TouchableOpacity onPress={() => navigation.navigate('NAVSOS')}>
         <Text style={{ marginTop: 10, color: '#a32c28' }}>Já possuo login</Text>
       </TouchableOpacity>
     </View>
@@ -100,6 +113,25 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 16,
     color: 'white', // Darker text color
+  },
+  foto: {
+    width: 150,
+    height: 150,
+    borderRadius: 100,
+    marginBottom: 16,
+  },
+  placeholder: {
+    width: 130,
+    height: 130,
+    borderRadius: 100,
+    backgroundColor: '#ccc',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  placeholderText: {
+    fontSize: 16,
+    color: '#555',
   },
   input: {
     backgroundColor:"white",

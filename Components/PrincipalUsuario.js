@@ -3,6 +3,7 @@ import { View, StyleSheet, TextInput, Modal, Text, TouchableOpacity, ScrollView,
 import MapView, { Marker } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
+import getWeatherData from './getWeatherData';
 
 const PrincipalUsuario = () => {
   const navigation = useNavigation();
@@ -10,13 +11,11 @@ const PrincipalUsuario = () => {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: () => (
-
-          
-          <View style={styles.profileContainer}>
-            <TouchableOpacity onPress={() => console.log('Perfil Pressionado')}>
-              <Image source={require('./foto.png')} style={styles.profileImage} />
-            </TouchableOpacity>
-          </View>
+        <View style={styles.profileContainer}>
+          <TouchableOpacity onPress={() => console.log('Perfil Pressionado')}>
+            <Image source={require('./foto.png')} style={styles.profileImage} />
+          </TouchableOpacity>
+        </View>
       ),
     });
   }, [navigation]);
@@ -25,30 +24,45 @@ const PrincipalUsuario = () => {
     latitude: -22.898590,
     longitude: -43.114353,
   };
+
   const [catchthewaves, setCatchthewaves] = useState(false);
   const [timer, setTimer] = useState(0);
   const [situacao, setSituacao] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedSearch, setSelectedSearch] = useState('');
   const [selectedTime, setSelectedTime] = useState(0); 
+  const [weatherData, setWeatherData] = useState(null);
+  const [pedidoValor, setPedidoValor] = useState(0); // Estado para armazenar o valor do pedido
 
+  useEffect(() => {
+    const fetchWeatherData = async () => {
+      try {
+        const data = await getWeatherData('Niterói');
+        console.log('Dados climáticos recebidos:', data); 
+        setWeatherData(data);
+        const rate = calculateRate(data?.weather[0]?.description); // Adiciona o operador de coalescência nula para evitar erros se os dados forem nulos ou não tiverem a descrição esperada
+        setPedidoValor(rate);
+      } catch (error) {
+        console.error('Erro ao obter dados do clima:', error);
+      }
+    };
+    fetchWeatherData();
+  }, []);
 
   const handleOKPress = () => {
     setModalVisible(true);
   };
 
   const closeModal = () => {
-    
     setModalVisible(false);
     setSituacao("");
-    
   };
+
   const closeModalCatch = () => {
     setTimer(0);
     setSelectedTime(0);
-    setCatchthewaves(false)
-  }
-
+    setCatchthewaves(false);
+  };
 
   const toggleModal = (time) => {
     setSelectedTime(time);
@@ -56,9 +70,9 @@ const PrincipalUsuario = () => {
       setCatchthewaves(true);
     }, 1000);
   };
+
   useEffect(() => {
     let interval;
-  
     if (catchthewaves) {
       const intervalDuration = 1000; 
       setTimer(selectedTime * 60); 
@@ -69,12 +83,83 @@ const PrincipalUsuario = () => {
       clearInterval(interval);
       setTimer(0); 
     }
-  
     return () => clearInterval(interval);
   }, [catchthewaves, selectedTime]);
-  
-  
 
+  const filteredWeatherData = weatherData?.weather.filter(condition =>
+    ['Clear', 'Clouds', 'Rain', 'Drizzle', 'Thunderstorm', 'Snow', 'Mist', 'Smoke', 'Haze', 'Dust', 'Fog', 'Sand', 'Ash', 'Squall', 'Tornado'].includes(condition.description)
+);
+
+const calculateRate = (description) => {
+  if (!weatherData || !weatherData.weather || weatherData.weather.length === 0) {
+    return 3; // Retorna 3 se não houver dados climáticos
+  }
+
+  switch(description) {
+    case 'clear sky':
+      return 10; // Retorna 10 para condição de céu limpo
+    case 'light rain':
+    case 'moderate rain':
+    case 'heavy intensity rain':
+    case 'very heavy rain':
+    case 'extreme rain':
+      return 5; // Retorna 5 para condição de chuva
+    case 'few clouds':
+    case 'scattered clouds':
+    case 'broken clouds':
+    case 'overcast clouds':
+      return 7; // Retorna 7 para condição de nuvens
+    case 'light intensity drizzle':
+    case 'drizzle':
+    case 'heavy intensity drizzle':
+    case 'light intensity drizzle rain':
+    case 'drizzle rain':
+    case 'heavy intensity drizzle rain':
+    case 'shower rain and drizzle':
+    case 'heavy shower rain and drizzle':
+    case 'shower drizzle':
+      return 4; // Retorna 4 para condição de chuvisco
+    case 'thunderstorm with light rain':
+    case 'thunderstorm with rain':
+    case 'thunderstorm with heavy rain':
+    case 'light thunderstorm':
+    case 'thunderstorm':
+    case 'heavy thunderstorm':
+    case 'ragged thunderstorm':
+    case 'thunderstorm with light drizzle':
+    case 'thunderstorm with drizzle':
+    case 'thunderstorm with heavy drizzle':
+      return 6; // Retorna 6 para condição de tempestade
+    case 'light snow':
+    case 'snow':
+    case 'heavy snow':
+    case 'sleet':
+    case 'shower sleet':
+    case 'light rain and snow':
+    case 'rain and snow':
+    case 'light shower snow':
+    case 'shower snow':
+    case 'heavy shower snow':
+      return 8; // Retorna 8 para condição de neve
+    case 'mist':
+    case 'smoke':
+    case 'haze':
+    case 'sand/ dust whirls':
+    case 'fog':
+    case 'sand':
+    case 'dust':
+    case 'volcanic ash':
+    case 'squalls':
+    case 'tornado':
+      return 3; // Retorna 3 para outras condições de clima
+    default:
+      return 3; // Retorna 3 para outras condições de clima
+  }
+};
+
+
+  
+  const rate = calculateRate(weatherData?.weather[0].description);
   return (
     <View style={styles.container}>
       <MapView style={styles.map} initialRegion={{
@@ -96,39 +181,32 @@ const PrincipalUsuario = () => {
           onSubmitEditing={handleOKPress}
         />
       </View>
-      <Modal animationType="slide"
-        transparent={true}
-        visible={catchthewaves}
-        onRequestClose={closeModalCatch}>
+
+      <Modal animationType="slide" transparent={true} visible={catchthewaves} onRequestClose={closeModalCatch}>
         <View style={styles.modalContentV}>
-          <Text style={styles.modalTextv}>Profissional solicitado: Vagner Dom</Text>
-          <Text style={styles.modalTextv}>Cronômetro: {timer}  segundos</Text>
-          <TouchableOpacity style={styles.closeButtonV} onPress={toggleModal}>
-            <Text style={styles.closeButtonTextV} onPress={closeModalCatch}>Cancelar profissional</Text>
+          <Text style={styles.modalTextV}>Profissional solicitado: Vagner Dom</Text>
+          <Text style={styles.modalTextV}>Cronômetro: {timer} segundos</Text>
+          <TouchableOpacity style={styles.closeButtonV} onPress={closeModalCatch}>
+            <Text style={styles.closeButtonTextV}>Cancelar profissional</Text>
           </TouchableOpacity>
         </View>
       </Modal>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={closeModal}
-      >
+
+      <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={closeModal}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalText}>Valor do Pedido: {situacao}</Text>
 
             <View style={styles.optionContainer}>
-            <TouchableOpacity style={styles.optionButton} onPress={() => toggleModal(12)}>
-  <Text style={styles.optionText}>Rápido</Text>
-  <Text style={styles.optionValue}>12 min - R$200</Text>
-</TouchableOpacity>
+              <TouchableOpacity style={styles.optionButton} onPress={() => toggleModal(12)}>
+                <Text style={styles.optionText}>Rápido</Text>
+                <Text style={styles.optionValue}>12 min - R${(12 * rate).toFixed(2)}</Text>
+              </TouchableOpacity>
 
-<TouchableOpacity style={styles.optionButton} onPress={() => toggleModal(30)}>
-  <Text style={styles.optionText}>Normal</Text>
-  <Text style={styles.optionValue}>30 min - R$100</Text>
-</TouchableOpacity>
-
+              <TouchableOpacity style={styles.optionButton} onPress={() => toggleModal(30)}>
+                <Text style={styles.optionText}>Normal</Text>
+                <Text style={styles.optionValue}>30 min - R${(30 * rate).toFixed(2)}</Text>
+              </TouchableOpacity>
             </View>
 
             <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
@@ -191,12 +269,11 @@ const PrincipalUsuario = () => {
             <Icon name="key" size={50} color="white" style={styles.icon} />
             <Text style={styles.searchButtonText}>Chaveiro</Text>
           </TouchableOpacity>
-          </ScrollView>
+        </ScrollView>
       </View>
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

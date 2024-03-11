@@ -7,13 +7,25 @@ import { useNavigation } from '@react-navigation/native';
 const PrincipalPrestador = () => {
   const navigation = useNavigation();
 
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: () => (
+
+          
+          <View style={styles.profileContainer}>
+                   <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Carteira')}>
+  <Text style={styles.buttonText}>Carteira</Text>
+</TouchableOpacity>
+          </View>
+      ),
+    });
+  }, [navigation]);
   const niteroiCoords = {
     latitude: -22.898590,
     longitude: -43.114353,
   };
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [detailsModalVisible, setDetailsModalVisible] = useState(false);
   const [selectedSearch, setSelectedSearch] = useState('');
 
   useEffect(() => {
@@ -87,97 +99,20 @@ const PrincipalPrestador = () => {
           </View>
         </View>
       </Modal>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={detailsModalVisible}
-        onRequestClose={closeDetailsModal}
-      >
-        <View style={styles.detailsModalContainer}>
-          <View style={styles.detailsModalContent}>
-            <Text style={styles.detailsModalText}>Detalhes da Troca de Pneu</Text>
-            <Text style={styles.detailsModalDescription}>Descrição: O serviço inclui a troca de pneu na localidade especificada.</Text>
-            <Text style={styles.detailsModalDescription}>Data: 12 de novembro de 2023</Text>
-            <Text style={styles.detailsModalDescription}>Hora: 15:30</Text>
-
-            <TouchableOpacity onPress={closeDetailsModal} style={styles.detailsCloseButton}>
-              <Text style={styles.detailsCloseButtonText}>Fechar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      
       <View style={styles.bottomContainer}>
-  <Text style={styles.bottomTitle}>Histórico de trabalho</Text>
-  <ScrollView horizontal={true} style={styles.searchContainer}>
-    <TouchableOpacity
-      style={[styles.searchButton, selectedSearch && styles.selectedSearch]}
-      onPress={() => {
-        setDetailsModalVisible(true);
-      }}
-    >
-      <MapView
-        style={styles.map}
-        initialRegion={{
-          latitude: niteroiCoords.latitude,
-          longitude: niteroiCoords.longitude,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
-        }}
-        scrollEnabled={false}
-        zoomEnabled={false}
-      >
-        <Marker coordinate={niteroiCoords} title="Niterói" />
-      </MapView>
-      <Text style={styles.searchButtonText}>Trocou Pneu</Text>
-      <Text style={styles.searchButtonTexts}>R$20,00</Text>
-    </TouchableOpacity>
-
-    <TouchableOpacity
-      style={[styles.searchButton, selectedSearch && styles.selectedSearch]}
-      onPress={() => {
-        setDetailsModalVisible(true);
-      }}
-    >
-      <MapView
-        style={styles.map}
-        initialRegion={{
-          latitude: niteroiCoords.latitude,
-          longitude: niteroiCoords.longitude,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
-        }}
-        scrollEnabled={false}
-        zoomEnabled={false}
-      >
-        <Marker coordinate={niteroiCoords} title="Niterói" />
-      </MapView>
-      <Text style={styles.searchButtonText}>Trocou Pneu</Text>
-      <Text style={styles.searchButtonTexts}>R$20,00</Text>
-    </TouchableOpacity>
-
-    <TouchableOpacity
-      style={[styles.searchButton, selectedSearch && styles.selectedSearch]}
-      onPress={() => {
-        setDetailsModalVisible(true);
-      }}
-    >
-      <MapView
-        style={styles.map}
-        initialRegion={{
-          latitude: niteroiCoords.latitude,
-          longitude: niteroiCoords.longitude,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
-        }}
-        scrollEnabled={false}
-        zoomEnabled={false}
-      >
-        <Marker coordinate={niteroiCoords} title="Niterói" />
-      </MapView>
-      <Text style={styles.searchButtonText}>Trocou Pneu</Text>
-      <Text style={styles.searchButtonTexts}>R$20,00</Text>
-    </TouchableOpacity>
-  </ScrollView>
+      
+      <View style={styles.imageContainer}>
+        <Image
+          source={require('./foto.png')}
+          style={styles.images}
+        />
+      </View>
+      <View style={styles.infoContainer}>
+        <Text style={styles.name}>VagnerDom</Text>
+        <Text style={styles.cpf}>111111111111</Text>
+      
+    </View>
 </View>
 </View>
   );
@@ -258,7 +193,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    height: '40%',
+    height: '30%',
     backgroundColor: '#1E1E1E',
     padding: 20,
     borderTopLeftRadius: 20,
@@ -332,12 +267,16 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 25,
   },
+
   profileContainer: {
-    width: '90%',
-    left: 176,
+    marginLeft: 220,
     flexDirection: 'row',
+    backgroundColor: 'red',
+    height: 40,
+    borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'space-between',
+    width: '90%',
   },
   profileImage: {
     textAlign: 'center',
@@ -388,6 +327,29 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  imageContainer: {
+    borderRadius: 50,
+    overflow: 'hidden', 
+    alignItems: 'center', 
+  },
+  images: {
+    borderRadius: 50,
+    width: 100,
+    height: 100,
+  },
+  infoContainer: {
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  name: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white', // cor do texto do nome
+  },
+  cpf: {
+    fontSize: 16,
+    color: 'lightgray', // cor do texto do CPF
   },
 });
 

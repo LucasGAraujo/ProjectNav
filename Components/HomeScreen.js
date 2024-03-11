@@ -27,6 +27,7 @@ const HomeScreen = () => {
   }
 
   return (
+    
     <ImageBackground source={require('./imagebackground.jpg')} style={styles.background}>
       <View style={styles.container}>
         <View>
@@ -44,6 +45,7 @@ const HomeScreen = () => {
         </View>
 
         <View style={styles.buttonContainer}>
+ 
           <TouchableOpacity style={styles.button} onPress={() => handleLogin(true)}>
             <Text style={styles.buttonText}>Login como Prestador</Text>
           </TouchableOpacity>

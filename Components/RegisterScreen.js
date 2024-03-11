@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Alert ,Image} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { auth, provider } from '../src/services/firebaseConfig';
+import * as ImagePicker from 'expo-image-picker'; import { auth, provider } from '../src/services/firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 const RegisterScreen = () => {

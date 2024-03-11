@@ -7,6 +7,7 @@ import HomeScreen from './Components/HomeScreen';
 import PrestadorScreen from './Components/PrestadorScreen';
 import PrincipalUsuario from './Components/PrincipalUsuario';
 import PrincipalPrestador from './Components/PrincipalPrestador';
+import CarteiraPrestador from './Components/CarteiraPrestador';
 
 
 
@@ -32,6 +33,7 @@ export default function App() {
         <Stack.Screen name="NAVSOS" component={HomeScreen} />
         <Stack.Screen name="Usuario" component={RegisterScreen}  />
         <Stack.Screen name="Prestador" component={PrestadorScreen} />
+        <Stack.Screen name="Carteira" component={CarteiraPrestador} />
         
         <Stack.Screen
           name="principaluser"
@@ -46,7 +48,7 @@ export default function App() {
           component={PrincipalPrestador}
           options={{ 
             gestureEnabled: false, // Desativar gestos de navegação
-            headerShown: false // Ocultar o cabeçalho
+           
           }}        /> 
       </Stack.Navigator>
     </NavigationContainer>

@@ -3,6 +3,7 @@ import { View, StyleSheet, TextInput, Modal, Text, TouchableOpacity, ScrollView,
 import MapView, { Marker } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
 const PrincipalPrestador = () => {
   const navigation = useNavigation();
@@ -24,33 +25,58 @@ const PrincipalPrestador = () => {
     latitude: -22.898590,
     longitude: -43.114353,
   };
-
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedSearch, setSelectedSearch] = useState('');
-
+  const [solicitacoes, setSolicitacoes] = useState([]);
+  const [indiceExibido, setIndiceExibido] = useState(0); // Índice da solicitação atual a ser exibida
+  const [aceito, setAceito] = useState(false); // Estado para controlar se a solicitação foi aceita
+  
   useEffect(() => {
-    
+    // Função para buscar as solicitações da API
+    const fetchSolicitacoes = async () => {
+      try {
+        const response = await axios.get('https://json-nav-soss-six.vercel.app/Solicitacao');
+        setSolicitacoes(response.data);
+      } catch (error) {
+        console.error('Erro ao buscar solicitações:', error);
+      }
+    };
+  
+    // Função para verificar se há novas solicitações
+    const checkNewSolicitacoes = async () => {
+      try {
+        const response = await axios.get('https://json-nav-soss-six.vercel.app/Solicitacao');
+        if (response.data.length > solicitacoes.length && !modalVisible && !aceito) {
+          setModalVisible(true); 
+          setSolicitacoes(response.data); 
+        }
+      } catch (error) {
+        console.error('Erro ao verificar novas solicitações:', error);
+      }
+    };
+    fetchSolicitacoes();
     const intervalId = setInterval(() => {
-      setModalVisible(true);
-    }, 10000);
+      checkNewSolicitacoes();
+    }, 1000);
 
-    
     return () => clearInterval(intervalId);
-  }, []);
-
+  }, [modalVisible, aceito]);
+  
   const closeModal = () => {
-    setModalVisible(false);
+    if (indiceExibido < solicitacoes.length - 1) {
+      setIndiceExibido(indiceExibido + 1);
+    } else {
+      setModalVisible(false);
+    }
   };
+  
   const closeModals = () => {
-    setModalVisible(false);
-    Alert.alert("Dirija ate o local ...")
+    closeModal();
+    setModalVisible(false)
+    setAceito(true);
+    Alert.alert("Dirija até o local ...");
   };
-
-  const closeDetailsModal = () => {
-    setDetailsModalVisible(false);
-  };
+  
   return (
-    
     <View style={styles.container}>
       <MapView style={styles.map} initialRegion={{
         latitude: niteroiCoords.latitude,
@@ -60,7 +86,7 @@ const PrincipalPrestador = () => {
       }}>
         <Marker coordinate={niteroiCoords} title="Niterói" />
       </MapView>
-
+  
       <Modal
         animationType="slide"
         transparent={true}
@@ -70,36 +96,36 @@ const PrincipalPrestador = () => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalText}>Precisamos de você</Text>
-
+  
             <View style={styles.optionContainer}>
-              <TouchableOpacity style={styles.optionButton}>
+            <TouchableOpacity style={styles.optionButton}>
               <MapView style={styles.map} initialRegion={{
-        latitude: niteroiCoords.latitude,
-        longitude: niteroiCoords.longitude,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01,
-      }}>
-        <Marker coordinate={niteroiCoords} title="Niterói" />
-      </MapView>
-              </TouchableOpacity>
-
+                latitude: niteroiCoords.latitude,
+                longitude: niteroiCoords.longitude,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
+              }}>
+                <Marker coordinate={niteroiCoords} title="Niterói" />
+              </MapView>
+            </TouchableOpacity>
               <TouchableOpacity style={styles.optionButton}>
-                <Text style={styles.optionText}>Local:João Brasil - Travessa 26 / RJ</Text>
-                <Text style={styles.optionValue}>R$50,00</Text>
+               <Text>{`Tipo de serviço: ${solicitacoes[indiceExibido]?.OquePrecisa} - ${solicitacoes[indiceExibido]?.id}`}</Text>
+    <Text>{`R$${solicitacoes[indiceExibido]?.Valor}`}</Text>
               </TouchableOpacity>
             </View>
+  
             <View style={styles.optionContainer}>
-            <TouchableOpacity onPress={closeModals} style={styles.closeButtonAceitar}>
-              <Text style={styles.closeButtonText}>Aceitar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
-              <Text style={styles.closeButtonText}>Recusar</Text>
-            </TouchableOpacity>
+              <TouchableOpacity onPress={closeModals} style={styles.closeButtonAceitar}>
+                <Text style={styles.closeButtonText}>Aceitar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
+                <Text style={styles.closeButtonText}>Recusar</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
       </Modal>
-      
+  
       <View style={styles.bottomContainer}>
       
       <View style={styles.imageContainer}>

@@ -26,18 +26,6 @@ const PrestadorScreen = () => {
     })();
   }, []);
 
-  const escolherFoto = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.cancelled) {
-      setFoto(result.uri);
-    }
-  };
   
   const handleJobSelection = (jobValue, jobLabel) => {
     const updatedSelection = [...selectedJobs];
@@ -86,15 +74,6 @@ const PrestadorScreen = () => {
     <ScrollView contentContainerStyle={styles.container}>
       
       <Text style={styles.title}>Registro Prestador</Text>
-      <TouchableOpacity onPress={escolherFoto}>
-        {foto ? (
-          <Image source={{ uri: foto }} style={styles.foto} />
-        ) : (
-          <View style={styles.placeholder}>
-            <Text style={styles.placeholderText}>Adicionar Foto</Text>
-          </View>
-        )}
-      </TouchableOpacity>
       <TextInput
         style={styles.input}
         placeholder="Cpf"

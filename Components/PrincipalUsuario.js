@@ -32,7 +32,40 @@ const PrincipalUsuario = () => {
   const [selectedSearch, setSelectedSearch] = useState('');
   const [selectedTime, setSelectedTime] = useState(0); 
   const [weatherData, setWeatherData] = useState(null);
-  const [pedidoValor, setPedidoValor] = useState(0); // Estado para armazenar o valor do pedido
+  const [pedidoValor, setPedidoValor] = useState(0); 
+  const [valor, setValor] = useState(0);
+
+  const enviarDadosParaAPI = async (dados) => {
+    try {
+      const response = await fetch('https://json-nav-soss-six.vercel.app/Solicitacao', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dados),
+      });
+  
+      if (response.ok) {
+        const data = await response.json(); // Parse somente se a resposta for válida em JSON
+        console.log('Resposta da API:', data);
+      } else {
+        const textResponse = await response.text(); // Se a resposta não for válida em JSON, leia como texto
+        console.log('Resposta da API:', textResponse);
+      }
+    } catch (error) {
+      console.error('Erro ao enviar dados para a API:', error);
+    }
+  };
+  
+  const idAleatorio = Math.floor(Math.random() * 101);
+  const dadosParaEnviar = {
+    "id":idAleatorio,
+    "Valor": valor,
+    "OquePrecisa": situacao
+  };
+  
+ 
+  
 
   useEffect(() => {
     const fetchWeatherData = async () => {
@@ -40,7 +73,7 @@ const PrincipalUsuario = () => {
         const data = await getWeatherData('Niterói');
         console.log('Dados climáticos recebidos:', data); 
         setWeatherData(data);
-        const rate = calculateRate(data?.weather[0]?.description); // Adiciona o operador de coalescência nula para evitar erros se os dados forem nulos ou não tiverem a descrição esperada
+        const rate = calculateRate(data?.weather[0]?.description);
         setPedidoValor(rate);
       } catch (error) {
         console.error('Erro ao obter dados do clima:', error);
@@ -64,8 +97,10 @@ const PrincipalUsuario = () => {
     setCatchthewaves(false);
   };
 
-  const toggleModal = (time) => {
+  const toggleModal = (time,valore) => {
+    setValor(parseFloat(valore)); 
     setSelectedTime(time);
+    enviarDadosParaAPI(dadosParaEnviar);
     setTimeout(() => {
       setCatchthewaves(true);
     }, 1000);
@@ -198,12 +233,12 @@ const calculateRate = (description) => {
             <Text style={styles.modalText}>Valor do Pedido: {situacao}</Text>
 
             <View style={styles.optionContainer}>
-              <TouchableOpacity style={styles.optionButton} onPress={() => toggleModal(12)}>
+              <TouchableOpacity style={styles.optionButton} onPress={() => toggleModal(12,(12 * rate).toFixed(2))}>
                 <Text style={styles.optionText}>Rápido</Text>
                 <Text style={styles.optionValue}>12 min - R${(12 * rate).toFixed(2)}</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.optionButton} onPress={() => toggleModal(30)}>
+              <TouchableOpacity style={styles.optionButton} onPress={() => toggleModal(30,(30 * rate).toFixed(2))}>
                 <Text style={styles.optionText}>Normal</Text>
                 <Text style={styles.optionValue}>30 min - R${(30 * rate).toFixed(2)}</Text>
               </TouchableOpacity>

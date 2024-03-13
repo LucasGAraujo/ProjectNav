@@ -11,7 +11,6 @@ const RegisterScreen = () => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [cPassword, setCPassword] = React.useState('');
-  const [foto, setFoto] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -22,18 +21,7 @@ const RegisterScreen = () => {
     })();
   }, []);
 
-  const escolherFoto = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
 
-    if (!result.cancelled) {
-      setFoto(result.uri);
-    }
-  };
   
   const handleRegister = () => {
     if (password !== cPassword) {
@@ -55,15 +43,6 @@ const RegisterScreen = () => {
     <View style={styles.container}>
 
       <Text style={styles.title}>Registro</Text>
-      <TouchableOpacity onPress={escolherFoto}>
-        {foto ? (
-          <Image source={{ uri: foto }} style={styles.foto} />
-        ) : (
-          <View style={styles.placeholder}>
-            <Text style={styles.placeholderText}>Adicionar Foto</Text>
-          </View>
-        )}
-      </TouchableOpacity>
       <TextInput
         style={styles.input}
         placeholder="Nome completo"
